@@ -5,3 +5,6 @@ authors = ["Matthias Totschnig <matthias@totschnig.org>","Roma Bhattacharjee <ro
 
 [dependencies]
 clap = "2.31.2"
+
+[[bin]]
+name = "ws"
