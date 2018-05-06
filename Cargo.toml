@@ -8,3 +8,4 @@ clap = "2.31.2"
 
 [[bin]]
 name = "ws"
+path = "src/main.rs"
