@@ -1,6 +1,6 @@
 [package]
 name = "workspace"
 version = "0.0.0"
-authors = ["Matthias Totschnig <matthias@totschnig.org>"]
+authors = ["Matthias Totschnig <matthias@totschnig.org>","Roma Bhattacharjee <roma0615@gmail.com>"]
 
 [dependencies]
