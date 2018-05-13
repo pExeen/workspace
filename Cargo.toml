@@ -7,5 +7,5 @@ authors = ["Matthias Totschnig <matthias@totschnig.org>","Roma Bhattacharjee <ro
 clap = "2.31.2"
 
 [[bin]]
-name = "ws"
+name = "workspace"
 path = "src/main.rs"
