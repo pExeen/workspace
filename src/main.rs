@@ -57,12 +57,22 @@ fn write(workspace: &Workspace) {
     path.push(&workspace.name);
     path.set_extension("yaml");
 
-    let mut file: fs::File = fs::OpenOptions::new()
+    let file = fs::OpenOptions::new()
         .read(false)
         .write(true)
-        .create(true)
-        .open(path)
-        .expect("Could not open workspace data");
+        .create_new(true)
+        .open(path);
+
+    let mut file = match file {
+        Ok(file) => file,
+        Err(_) => {
+            eprintln!(
+                "ERROR: A workspace called \"{}\" already exists",
+                workspace.name
+            );
+            std::process::exit(1);
+        }
+    };
 
     file.write_fmt(format_args!("{}", serialized))
         .expect("Could not write workspace data");
