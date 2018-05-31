@@ -1,21 +1,12 @@
-extern crate clap;
-use clap::{App, Arg, ArgMatches, SubCommand};
+mod workspace;
 
-use std::env;
-use std::fs;
-use std::path::PathBuf;
-use std::io::Write;
-
-extern crate serde;
-extern crate serde_yaml;
 #[macro_use]
 extern crate serde_derive;
+extern crate clap;
 
-#[derive(Serialize, Deserialize, Debug)]
-struct Workspace {
-    name: String,
-    path: PathBuf,
-}
+use workspace::Workspace;
+use clap::{App, Arg, ArgMatches, SubCommand};
+use std::env;
 
 fn main() {
     let matches = App::new("workspace")
@@ -39,52 +30,14 @@ fn main() {
 }
 
 fn new(matches: &ArgMatches) {
-    let workspace = Workspace {
+    let ws = Workspace {
         name: matches.value_of("NAME").unwrap().to_string(),
         path: env::current_dir().expect("Could not read current directory"),
     };
-    write(&workspace);
-    println!(
-        "Created workspace \"{}\" in {:?}",
-        workspace.name, workspace.path
-    );
-}
-
-fn write(workspace: &Workspace) {
-    let serialized = serde_yaml::to_string(&workspace).unwrap();
-
-    let mut path = data_path();
-    path.push(&workspace.name);
-    path.set_extension("yaml");
-
-    let file = fs::OpenOptions::new()
-        .read(false)
-        .write(true)
-        .create_new(true)
-        .open(path);
-
-    let mut file = match file {
-        Ok(file) => file,
-        Err(_) => {
-            eprintln!(
-                "ERROR: A workspace called \"{}\" already exists",
-                workspace.name
-            );
-            std::process::exit(1);
-        }
-    };
-
-    file.write_fmt(format_args!("{}", serialized))
-        .expect("Could not write workspace data");
-}
-
-fn data_path() -> PathBuf {
-    let mut path = env::home_dir().expect("Could not find home directory");
-    path.push(".workspace");
-
-    if !path.exists() {
-        fs::create_dir(&path).expect(&format!("Could not create directory {:?}", path));
+    if ws.exists() {
+        eprintln!("ERROR: A workspace called \"{}\" already exists", ws.name);
+        std::process::exit(1);
     }
-
-    return path;
+    ws.write();
+    println!("Created workspace \"{}\" in {:?}", ws.name, ws.path);
 }
