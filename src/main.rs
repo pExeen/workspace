@@ -32,7 +32,7 @@ fn main() {
 fn new(matches: &ArgMatches) {
     let ws = Workspace {
         name: matches.value_of("NAME").unwrap().to_string(),
-        path: env::current_dir().expect("Could not read current directory"),
+        path: env::current_dir().expect("ERROR: Could not read current directory"),
     };
     if ws.exists() {
         eprintln!("ERROR: A workspace called \"{}\" already exists", ws.name);

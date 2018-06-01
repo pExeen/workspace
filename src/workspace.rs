@@ -14,7 +14,7 @@ pub struct Workspace {
 
 impl Workspace {
     pub fn write(&self) -> &Self {
-        const ERR_MESSAGE: &str = "Could not write workspace data";
+        const ERR_MESSAGE: &str = "ERROR: Could not write workspace data";
 
         let path = self.data_path();
         let mut file = fs::OpenOptions::new()
@@ -36,11 +36,11 @@ impl Workspace {
     }
 
     fn data_path(&self) -> PathBuf {
-        let mut path = env::home_dir().expect("Could not find home directory");
+        let mut path = env::home_dir().expect("ERROR: Could not find home directory");
         path.push(".workspace");
 
         if !path.exists() {
-            fs::create_dir(&path).expect(&format!("Could not create directory {:?}", path));
+            fs::create_dir(&path).expect(&format!("ERROR: Could not create directory {:?}", path));
         }
 
         path.push(&self.name);
