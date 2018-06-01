@@ -36,16 +36,21 @@ impl Workspace {
     }
 
     fn data_path(&self) -> PathBuf {
-        let mut path = env::home_dir().expect("ERROR: Could not find home directory");
-        path.push(".workspace");
-
-        if !path.exists() {
-            fs::create_dir(&path).expect(&format!("ERROR: Could not create directory {:?}", path));
-        }
-
+        let mut path = data_path();
         path.push(&self.name);
         path.set_extension("yaml");
 
         path
     }
+}
+
+pub fn data_path() -> PathBuf {
+    let mut path = env::home_dir().expect("ERROR: Could not find home directory");
+    path.push(".workspace");
+
+    if !path.exists() {
+        fs::create_dir(&path).expect(&format!("ERROR: Could not create directory {:?}", path));
+    }
+
+    path
 }
