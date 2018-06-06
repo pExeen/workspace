@@ -22,10 +22,21 @@ fn main() {
                         .required(true),
                 ),
         )
+        .subcommand(
+            SubCommand::with_name("delete")
+                .about("Deletes a specified workspace in this directory, if present")
+                .arg(
+                    Arg::with_name("NAME")
+                        .help("Name of the workspace to delete")
+                        .required(true),
+                ),
+        )
         .get_matches();
 
     if let Some(matches) = matches.subcommand_matches("new") {
         new(matches);
+    } else if let Some(matches) = matches.subcommand_matches("delete") {
+        delete(matches);
     }
 }
 
@@ -40,4 +51,17 @@ fn new(matches: &ArgMatches) {
     }
     ws.write();
     println!("Created workspace \"{}\" in {:?}", ws.name, ws.path);
+}
+
+fn delete(matches: &ArgMatches) {
+    let ws = Workspace {
+        name: matches.value_of("NAME").unwrap().to_string(),
+        path: env::current_dir().expect("ERROR: Could not read current directory"),
+    };
+    if !ws.exists() {
+        eprintln!("ERROR: A workspace called \"{}\" does not exist", ws.name);
+        std::process::exit(1);
+    }
+    ws.delete();
+    println!("Deleted workspace \"{}\" in {:?}", ws.name, ws.path);
 }

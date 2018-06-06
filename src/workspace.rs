@@ -31,6 +31,12 @@ impl Workspace {
         self
     }
 
+    pub fn delete(&self) -> &Self {
+        let path = self.data_path();
+        fs::remove_file(path).expect("ERROR: Could not delete workspace data");
+        self
+    }
+ 
     pub fn exists(&self) -> bool {
         self.data_path().exists()
     }
