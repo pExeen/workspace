@@ -31,7 +31,11 @@ fn main() {
                         .required(true),
                 ),
         )
-        .subcommand(SubCommand::with_name("list").about("Lists all existing workspaces"))
+        .subcommand(
+            SubCommand::with_name("list")
+                .alias("ls")
+                .about("Lists all existing workspaces"),
+        )
         .get_matches();
 
     if let Some(matches) = matches.subcommand_matches("new") {
