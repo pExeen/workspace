@@ -7,7 +7,6 @@ extern crate clap;
 use workspace::Workspace;
 use clap::{App, Arg, ArgMatches, SubCommand};
 use std::env;
-use std::fs;
 
 fn main() {
     let matches = App::new("workspace")
@@ -34,7 +33,8 @@ fn main() {
         )
         .subcommand(
             SubCommand::with_name("list")
-                .about("Lists all existing workspaces")
+                .alias("ls")
+                .about("Lists all existing workspaces"),
         )
         .get_matches();
 
@@ -74,37 +74,12 @@ fn delete(matches: &ArgMatches) {
 }
 
 fn list() {
-    let dir_path = workspace::data_path();
-    let paths = fs::read_dir(dir_path).unwrap();
-
-    let mut workspaces: Vec<String> = Vec::new();
-    for entry in paths {
-        let path = entry.unwrap().path();
-        // assuming all yaml files are workspaces
-        // might need to change this if save other settings as yaml files
-        if file_extension_from_path(&path) == "yaml" {
-            let file_stem = file_stem_from_path(&path);
-            workspaces.push(file_stem);
-        }
-    }
-    if workspaces.len() == 0 {
+    let mut is_any = false;
+    workspace::read_all(&mut |workspace| {
+        println!("{}  {}", workspace.name, workspace.path.to_string_lossy());
+        is_any = true;
+    });
+    if !is_any {
         println!("No existing workspaces.\nRun `workspace new <NAME>` to create one.");
-    } else {
-        println!("Existing workspaces:");
-        for ws in workspaces {
-            println!("  {}", ws);
-        }
     }
-}
-
-fn file_stem_from_path(path: &std::path::PathBuf) -> String {
-    let file_stem = path.file_stem().unwrap();
-    let os_string = file_stem.to_os_string();
-    os_string.to_str().unwrap().to_string()
-}
-
-fn file_extension_from_path(path: &std::path::PathBuf) -> String {
-    let file_stem = path.extension().unwrap();
-    let os_string = file_stem.to_os_string();
-    os_string.to_str().unwrap().to_string()
 }
