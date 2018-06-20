@@ -55,11 +55,11 @@ fn new(matches: &ArgMatches) {
         path: env::current_dir().expect("ERROR: Could not read current directory"),
     };
     if ws.exists() {
-        eprintln!("ERROR: A workspace called \"{}\" already exists", ws.name);
+        eprintln!("ERROR: A workspace called '{}' already exists", ws.name);
         std::process::exit(1);
     }
     ws.write();
-    println!("Created workspace \"{}\" in {}", ws.name, ws.path.display());
+    println!("Created workspace '{}' in {}", ws.name, ws.path.display());
 }
 
 fn delete(matches: &ArgMatches) {
@@ -68,11 +68,11 @@ fn delete(matches: &ArgMatches) {
         path: env::current_dir().expect("ERROR: Could not read current directory"),
     };
     if !ws.exists() {
-        eprintln!("ERROR: A workspace called \"{}\" does not exist", ws.name);
+        eprintln!("ERROR: A workspace called '{}' does not exist", ws.name);
         std::process::exit(1);
     }
     ws.delete();
-    println!("Deleted workspace \"{}\" in {}", ws.name, ws.path.display());
+    println!("Deleted workspace '{}' in {}", ws.name, ws.path.display());
 }
 
 fn list() {
