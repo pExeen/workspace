@@ -57,7 +57,7 @@ fn new(matches: &ArgMatches) {
         std::process::exit(1);
     }
     ws.write();
-    println!("Created workspace \"{}\" in {:?}", ws.name, ws.path);
+    println!("Created workspace \"{}\" in {}", ws.name, ws.path.display());
 }
 
 fn delete(matches: &ArgMatches) {
@@ -70,13 +70,13 @@ fn delete(matches: &ArgMatches) {
         std::process::exit(1);
     }
     ws.delete();
-    println!("Deleted workspace \"{}\" in {:?}", ws.name, ws.path);
+    println!("Deleted workspace \"{}\" in {}", ws.name, ws.path.display());
 }
 
 fn list() {
     let mut is_any = false;
     workspace::read_all(&mut |workspace| {
-        println!("{}  {}", workspace.name, workspace.path.to_string_lossy());
+        println!("{}  {}", workspace.name, workspace.path.display());
         is_any = true;
     });
     if !is_any {
