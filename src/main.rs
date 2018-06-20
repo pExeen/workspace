@@ -3,10 +3,12 @@ mod workspace;
 #[macro_use]
 extern crate serde_derive;
 extern crate clap;
+extern crate colored;
 
+use std::env;
 use workspace::Workspace;
 use clap::{App, Arg, ArgMatches, SubCommand};
-use std::env;
+use colored::*;
 
 fn main() {
     let matches = App::new("workspace")
@@ -53,11 +55,11 @@ fn new(matches: &ArgMatches) {
         path: env::current_dir().expect("ERROR: Could not read current directory"),
     };
     if ws.exists() {
-        eprintln!("ERROR: A workspace called \"{}\" already exists", ws.name);
+        eprintln!("ERROR: A workspace called '{}' already exists", ws.name);
         std::process::exit(1);
     }
     ws.write();
-    println!("Created workspace \"{}\" in {:?}", ws.name, ws.path);
+    println!("Created workspace '{}' in {}", ws.name, ws.path.display());
 }
 
 fn delete(matches: &ArgMatches) {
@@ -66,17 +68,21 @@ fn delete(matches: &ArgMatches) {
         path: env::current_dir().expect("ERROR: Could not read current directory"),
     };
     if !ws.exists() {
-        eprintln!("ERROR: A workspace called \"{}\" does not exist", ws.name);
+        eprintln!("ERROR: A workspace called '{}' does not exist", ws.name);
         std::process::exit(1);
     }
     ws.delete();
-    println!("Deleted workspace \"{}\" in {:?}", ws.name, ws.path);
+    println!("Deleted workspace '{}' in {}", ws.name, ws.path.display());
 }
 
 fn list() {
     let mut is_any = false;
     workspace::read_all(&mut |workspace| {
-        println!("{}  {}", workspace.name, workspace.path.to_string_lossy());
+        println!(
+            "{}  {}",
+            workspace.name,
+            workspace.path.display().to_string().bright_black()
+        );
         is_any = true;
     });
     if !is_any {

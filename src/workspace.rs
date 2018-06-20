@@ -86,7 +86,10 @@ pub fn data_path() -> PathBuf {
     path.push(".workspace");
 
     if !path.exists() {
-        fs::create_dir(&path).expect(&format!("ERROR: Could not create directory {:?}", path));
+        fs::create_dir(&path).expect(&format!(
+            "ERROR: Could not create directory {}",
+            path.display()
+        ));
     }
 
     path
