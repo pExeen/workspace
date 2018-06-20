@@ -3,10 +3,12 @@ mod workspace;
 #[macro_use]
 extern crate serde_derive;
 extern crate clap;
+extern crate colored;
 
+use std::env;
 use workspace::Workspace;
 use clap::{App, Arg, ArgMatches, SubCommand};
-use std::env;
+use colored::*;
 
 fn main() {
     let matches = App::new("workspace")
@@ -76,7 +78,11 @@ fn delete(matches: &ArgMatches) {
 fn list() {
     let mut is_any = false;
     workspace::read_all(&mut |workspace| {
-        println!("{}  {}", workspace.name, workspace.path.display());
+        println!(
+            "{}  {}",
+            workspace.name,
+            workspace.path.display().to_string().bright_black()
+        );
         is_any = true;
     });
     if !is_any {
