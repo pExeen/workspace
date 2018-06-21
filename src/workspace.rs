@@ -1,8 +1,8 @@
 extern crate serde;
 extern crate serde_yaml;
 
-use std::fs;
 use std::env;
+use std::fs;
 use std::io::{Read, Write};
 use std::path::PathBuf;
 
@@ -86,10 +86,8 @@ pub fn data_path() -> PathBuf {
     path.push(".workspace");
 
     if !path.exists() {
-        fs::create_dir(&path).expect(&format!(
-            "ERROR: Could not create directory {}",
-            path.display()
-        ));
+        fs::create_dir(&path)
+            .unwrap_or_else(|_| panic!("ERROR: Could not create directory {}", path.display()))
     }
 
     path

@@ -5,10 +5,10 @@ extern crate serde_derive;
 extern crate clap;
 extern crate colored;
 
-use std::env;
-use workspace::Workspace;
 use clap::{App, Arg, ArgMatches, SubCommand};
 use colored::*;
+use std::env;
+use workspace::Workspace;
 
 fn main() {
     let matches = App::new("workspace")
