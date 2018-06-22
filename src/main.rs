@@ -76,16 +76,18 @@ fn delete(matches: &ArgMatches) {
 }
 
 fn list() {
-    let mut is_any = false;
-    workspace::read_all(&mut |workspace| {
+    let all = workspace::all();
+
+    if all.is_empty() {
+        println!("No existing workspaces.\nRun `workspace new <NAME>` to create one.");
+        return;
+    }
+
+    for ws in all {
         println!(
             "{}  {}",
-            workspace.name,
-            workspace.path.display().to_string().bright_black()
+            ws.name,
+            ws.path.display().to_string().bright_black()
         );
-        is_any = true;
-    });
-    if !is_any {
-        println!("No existing workspaces.\nRun `workspace new <NAME>` to create one.");
     }
 }

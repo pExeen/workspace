@@ -50,19 +50,22 @@ impl Workspace {
     }
 }
 
-pub fn read_all(callback: &mut FnMut(Workspace)) {
-    const ERR_MESSAGE: &str = "ERROR: could not read workspace data";
-
-    read_files(&mut |mut file: fs::File| {
-        let mut content = String::new();
-        file.read_to_string(&mut content).expect(ERR_MESSAGE);
-        let workspace = serde_yaml::from_str(&content).expect(ERR_MESSAGE);
-        callback(workspace);
-    });
+pub fn all() -> Vec<Workspace> {
+    files().into_iter().map(parse).collect()
 }
 
-pub fn read_files(callback: &mut FnMut(fs::File)) {
+pub fn parse(mut file: fs::File) -> Workspace {
+    const ERR_MESSAGE: &str = "ERROR: could not read workspace data";
+
+    let mut content = String::new();
+    file.read_to_string(&mut content).expect(ERR_MESSAGE);
+
+    serde_yaml::from_str(&content).expect(ERR_MESSAGE)
+}
+
+pub fn files() -> Vec<fs::File> {
     const ERR_MESSAGE: &str = "ERROR: could not get workspace data";
+    let mut files: Vec<fs::File> = Vec::new();
 
     for entry in fs::read_dir(data_path()).expect(ERR_MESSAGE) {
         let entry = entry.expect(ERR_MESSAGE);
@@ -75,10 +78,12 @@ pub fn read_files(callback: &mut FnMut(fs::File)) {
                 .expect(ERR_MESSAGE);
             let extension = path.extension();
             if extension.is_some() && extension.unwrap().to_string_lossy() == "yaml" {
-                callback(file);
+                files.push(file);
             }
         }
     }
+
+    files
 }
 
 pub fn data_path() -> PathBuf {
