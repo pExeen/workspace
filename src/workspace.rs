@@ -50,35 +50,61 @@ impl Workspace {
     }
 }
 
-pub fn read_all(callback: &mut FnMut(Workspace)) {
-    const ERR_MESSAGE: &str = "ERROR: could not read workspace data";
-
-    read_files(&mut |mut file: fs::File| {
-        let mut content = String::new();
-        file.read_to_string(&mut content).expect(ERR_MESSAGE);
-        let workspace = serde_yaml::from_str(&content).expect(ERR_MESSAGE);
-        callback(workspace);
-    });
+pub fn all() -> Vec<Workspace> {
+    files().into_iter().map(parse).collect()
 }
 
-pub fn read_files(callback: &mut FnMut(fs::File)) {
-    const ERR_MESSAGE: &str = "ERROR: could not get workspace data";
+pub fn parse(mut file: fs::File) -> Workspace {
+    const ERR_MESSAGE: &str = "ERROR: could not read workspace data";
 
-    for entry in fs::read_dir(data_path()).expect(ERR_MESSAGE) {
-        let entry = entry.expect(ERR_MESSAGE);
-        let file_type = entry.file_type();
-        if file_type.is_ok() && file_type.unwrap().is_file() {
-            let path = entry.path();
-            let file = fs::OpenOptions::new()
-                .read(true)
-                .open(&path)
-                .expect(ERR_MESSAGE);
-            let extension = path.extension();
-            if extension.is_some() && extension.unwrap().to_string_lossy() == "yaml" {
-                callback(file);
-            }
+    let mut content = String::new();
+    file.read_to_string(&mut content).expect(ERR_MESSAGE);
+
+    serde_yaml::from_str(&content).expect(ERR_MESSAGE)
+}
+
+pub fn files() -> Vec<fs::File> {
+    paths().into_iter().map(read).collect()
+}
+
+pub fn read(path: PathBuf) -> fs::File {
+    fs::OpenOptions::new()
+        .read(true)
+        .open(path)
+        .expect("ERROR: could not get workspace data")
+}
+
+pub fn paths() -> Vec<PathBuf> {
+    let entries = fs::read_dir(data_path()).expect("ERROR: could not find workspace data");
+    let mut paths: Vec<PathBuf> = Vec::new();
+
+    for entry in entries {
+        if entry.is_err() {
+            continue;
         }
+        let entry = entry.unwrap();
+
+        if entry.file_type().is_err() {
+            continue;
+        }
+        let file_type = entry.file_type().unwrap();
+        if !file_type.is_file() {
+            continue;
+        }
+
+        let path = entry.path();
+        if path.extension().is_none() {
+            continue;
+        }
+        let extension = path.extension().unwrap();
+        if extension.to_string_lossy() != "yaml" {
+            continue;
+        }
+
+        paths.push(entry.path());
     }
+
+    paths
 }
 
 pub fn data_path() -> PathBuf {
