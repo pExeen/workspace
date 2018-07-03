@@ -119,10 +119,12 @@ fn list() {
         return;
     }
 
+    let longest_name_length = (*all).iter().map(|ws| ws.name.len()).fold(0, std::cmp::max);
     for ws in all {
         println!(
-            "{}  {}",
+            "{0:<1$}  {2}",
             ws.name,
+            longest_name_length,
             ws.path.display().to_string().bright_black()
         );
     }
