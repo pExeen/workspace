@@ -9,6 +9,10 @@
     ```bash
     eval $(workspace shell bash)
     ```
+  - **fish**: Add this line to your `config.fish`
+    ```fish
+    workspace shell fish | source
+    ```
   - **PowerShell**: Add this line to your `profile.ps1`
     ```powershell
     Invoke-Expression "$(workspace shell posh)"
