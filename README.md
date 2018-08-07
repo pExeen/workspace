@@ -9,7 +9,7 @@
     ```bash
     eval $(workspace shell bash)
     ```
-  - **PowerShell**: Add this line to your profile.ps1
+  - **PowerShell**: Add this line to your `profile.ps1`
     ```powershell
     Invoke-Expression "$(workspace shell posh)"
     ```
