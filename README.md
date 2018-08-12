@@ -25,7 +25,7 @@
 
 > Should I use `workspace` or `ws`?
 
-Use `ws`. `workspace` is a binary that powers the `ws` function and sets it up in your shell configuration.
+Use `ws`. `workspace` is the binary that powers the `ws` function and sets it up in your shell configuration.
 
 > Why do I need to add something to my shell configuration?
 
