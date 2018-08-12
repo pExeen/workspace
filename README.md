@@ -3,7 +3,10 @@
 
 ## Installation
 
-- Get the latest binary for your platform from the [releases](https://github.com/matthias-t/workspace/releases) page
+- ```bash
+  > cargo install workspace
+  ```
+  Or get a prebuilt binary for your platform from the [releases](https://github.com/matthias-t/workspace/releases) page
 - Setup the `ws` command in your shell:
   - **bash**: Add this line to your `.bashrc`
     ```bash
