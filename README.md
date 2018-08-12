@@ -30,7 +30,6 @@ Otherwise workspace can't change your working directory or run commands that you
 
 > I don't trust you
 
-That's ok. If you run `workspace shell bash` or `workspace shell posh` you can see what you are invoking. 
-Anyway, just look at the code, it's all here. The binaries are built and uploaded by Travis, not me — 
+That's not technically a question. But the good thing is: you don't need to. If you run `workspace shell ...` you can see what you are invoking. You can look at the code, it's all here. The binaries are built and uploaded by Travis, not me — 
 see [`.travis.yml`](https://github.com/matthias-t/workspace/blob/master/.travis.yml) and check out 
 [the builds](https://travis-ci.com/matthias-t/workspace).
