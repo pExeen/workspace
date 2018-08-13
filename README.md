@@ -3,10 +3,12 @@
 
 ## Installation
 
-- ```bash
+- Install with `cargo` (cargo ships with [Rust](https://rustup.rs))
+  ```bash
   > cargo install workspace
   ```
-  Or get a prebuilt binary for your platform from the [releases](https://github.com/matthias-t/workspace/releases) page
+  or get a prebuilt binary for your platform from the [releases](https://github.com/matthias-t/workspace/releases) page.
+
 - Setup the `ws` command in your shell:
   - **bash**: Add this line to your `.bashrc`
     ```bash
